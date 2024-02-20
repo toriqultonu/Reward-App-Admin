@@ -19,6 +19,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Map<String, dynamic> userData = new Map();
   var points = 0;
+  var username = '';
+  var useremail = '';
 
   String scannedResult = '';
   startScan() async{
@@ -39,6 +41,8 @@ class _HomePageState extends State<HomePage> {
     setState((){
       scannedResult = result;
       points = userData["points"];
+      username = userData["name"];
+      useremail = userData["email"];
     });
 
   }
@@ -52,37 +56,128 @@ class _HomePageState extends State<HomePage> {
             title: Center(child: Text("Dragon Court", style: TextStyle(color: Colors.white),)),
           ),
           body: SingleChildScrollView(
-            child: Column(
-              children: [
-
-                Text('UserID : $scannedResult'),
-                SizedBox(height: 30,),
-              Row(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Add Points: $points'),
-                  // Spacer(),
-                  // TextField()
-                ],),
-                SizedBox(height: 30,),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: (){
-                        startScan();
-                      },
-                      child: Text('Start Scan'),
+                  SizedBox(height: 30,),
+                  Text('User ID: ', style: TextStyle(fontSize: 20),),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 45,
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.8),
+                            spreadRadius: 0.1,
+                            blurRadius: 2,
+                            offset: Offset(3, 3),
+                          )
+                        ]),
+                    child: Text('$scannedResult', style: TextStyle(fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold),),
+                  ),
+                  SizedBox(height: 20,),
+                  Row(
+                    children: [
+                      Text('User Email: ', style: TextStyle(fontSize: 18),),
+                      Spacer(),
+                      Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.width * 0.6,
+
+                        alignment: Alignment.centerRight,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6.0),),
+                        child: Text(useremail, style: TextStyle(fontSize: 18,),),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('User Name: ', style: TextStyle(fontSize: 18),),
+                      Spacer(),
+                      Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.width * 0.6,
+
+                        alignment: Alignment.centerRight,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6.0),),
+                        child: Text(username, style: TextStyle(fontSize: 18,),),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Points: ', style: TextStyle(fontSize: 18),),
+                      Spacer(),
+                      Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.width * 0.6,
+
+                        alignment: Alignment.centerRight,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6.0),),
+                        child: Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: (){
+                                setState(() {
+                                  points--;
+                                });
+                              },
+                              child:Text('-' , style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                            ),
+                            Spacer(),
+                            Text('$points', style: TextStyle(fontSize: 25,),),
+                            Spacer(),
+                            ElevatedButton(
+                              onPressed: (){
+                                setState(() {
+                                  points++;
+                                });
+                              },
+                              child: Text('+' , style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+
+                  SizedBox(height: 30,),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: (){
+                            startScan();
+                          },
+                          child: Text('Start Scan'),
+                        ),
+                        Spacer(),
+                        ElevatedButton(
+                          onPressed: (){
+                            /// Todo submit operation.
+                            updateUserDetails("points", points, scannedResult);
+                          },
+                          child: Text('Submit'),
+                        ),
+                      ],
                     ),
-                    Spacer(),
-                    ElevatedButton(
-                      onPressed: (){
-                        /// Todo submit operation.
-                        updateUserDetails("points", 50, scannedResult);
-                      },
-                      child: Text('Submit'),
-                    ),
-                  ],
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           )),
     );
