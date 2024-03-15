@@ -29,6 +29,13 @@ class _HomePageState extends State<HomePage> {
       result = await FlutterBarcodeScanner.scanBarcode('#FFFFFF', 'Cancel', true, ScanMode.QR);
       DocumentSnapshot snapshot = await fetchUserData(result);
       userData = snapshot.data() as Map<String, dynamic>;
+      setState(() {
+        scannedResult = result;
+        points = userData["points"];
+        username = userData["name"].toString();
+        useremail = userData["email"].toString();
+
+      });
 
     }on PlatformException catch(e){
       result = 'Failed to get platform version';
@@ -37,14 +44,7 @@ class _HomePageState extends State<HomePage> {
       showToast(message: 'Error occured ${e.toString()}');
     }
     if(!mounted) return;
-
-    setState((){
-      scannedResult = result;
-      points = userData["points"];
-      username = userData["name"];
-      useremail = userData["email"];
-    });
-
+    
   }
   @override
   Widget build(BuildContext context) {
@@ -86,15 +86,16 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text('User Email: ', style: TextStyle(fontSize: 18),),
                       Spacer(),
+
                       Container(
                         height: 40,
                         width: MediaQuery.of(context).size.width * 0.6,
 
                         alignment: Alignment.centerRight,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          //color: Colors.white,
                           borderRadius: BorderRadius.circular(6.0),),
-                        child: Text(useremail, style: TextStyle(fontSize: 18,),),
+                        child: Text('$useremail', style: TextStyle(fontSize: 18,),),
                       ),
                     ],
                   ),
@@ -108,7 +109,7 @@ class _HomePageState extends State<HomePage> {
 
                         alignment: Alignment.centerRight,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          //color: Colors.white,
                           borderRadius: BorderRadius.circular(6.0),),
                         child: Text(username, style: TextStyle(fontSize: 18,),),
                       ),
@@ -131,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                             ElevatedButton(
                               onPressed: (){
                                 setState(() {
-                                  points--;
+                                points--;
                                 });
                               },
                               child:Text('-' , style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
@@ -142,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                             ElevatedButton(
                               onPressed: (){
                                 setState(() {
-                                  points++;
+                                points++;
                                 });
                               },
                               child: Text('+' , style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
@@ -161,7 +162,10 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         ElevatedButton(
                           onPressed: (){
-                            startScan();
+
+                            setState(() {
+                              startScan();
+                            });
                           },
                           child: Text('Start Scan'),
                         ),
